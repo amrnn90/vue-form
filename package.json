@@ -5,7 +5,8 @@
   "main": "dist/js/vue-form.umd.js",
   "scripts": {
     "start": "node vuepack.js dev",
-    "build": "node vuepack.js build"
+    "build": "node vuepack.js build",
+    "prepare": "npm run build"
   },
   "keywords": [],
   "author": "",
