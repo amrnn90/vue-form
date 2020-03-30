@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "node vuepack.js dev"
+  },
+  "dependencies": {
+    "@vue/composition-api": "^0.5.0",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "@amrnn/vuepack": "^1.0.8",
+    "vue-template-compiler": "^2.6.11"
+  }
+}

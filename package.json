@@ -1,0 +1,26 @@
+{
+  "name": "@amrnn/vue-form",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/js/vue-form.umd.js",
+  "scripts": {
+    "start": "node vuepack.js dev",
+    "build": "node vuepack.js build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@amrnn/vuepack": "^1.0.8",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.11",
+    "@vue/composition-api": "^0.5.0"
+  },
+  "dependencies": {
+    "copy-anything": "^2.0.1",
+    "fast-deep-equal": "^3.1.1",
+    "p-cancelable": "^2.0.0"
+  }
+}
