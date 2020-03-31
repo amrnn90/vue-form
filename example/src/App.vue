@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <base-form @submit="onSubmit" #default="{form}">
-      <base-form-field name="title" #default="{inputProps, inputListeners}">
+    <base-form #default="{form}" @submit="onSubmit">
+      <base-form-field #default="{inputProps, inputListeners}" name="title">
         <input type="text" v-bind="inputProps" v-on="inputListeners" />
       </base-form-field>
 
@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import { BaseForm } from "../../src/";
-import BaseFormField from "./BaseFormField";
+import { BaseForm, BaseFormField } from "../../src/";
 
 export default {
   name: "App",
