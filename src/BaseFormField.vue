@@ -1,5 +1,12 @@
 <template>
-  <div ref="el" class="base-form-field">
+  <div
+    ref="el"
+    class="base-form-field"
+    :class="{
+      'has-error': field.hasError,
+      'has-descendents-error': field.hasDescendentsError,
+    }"
+  >
     <label :for="field.name" class="base-form-field__label">
       {{ field.label }}
     </label>
@@ -10,7 +17,7 @@
       class="base-form-field__input"
     />
 
-    <div v-if="field.error" class="base-form-field__error">
+    <div v-if="field.hasError" class="base-form-field__error">
       {{ field.error }}
     </div>
   </div>
