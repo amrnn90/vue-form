@@ -1,6 +1,6 @@
 {
   "name": "@amrnn/vue-form",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/js/vue-form.umd.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@amrnn/vuepack": "^1.0.8",
+    "eslint-config-prettier": "^6.10.1",
     "vue-template-compiler": "^2.6.11"
   },
   "peerDependencies": {
