@@ -21,8 +21,7 @@
     "@vue/composition-api": "^0.5.0"
   },
   "dependencies": {
-    "copy-anything": "^2.0.1",
-    "fast-deep-equal": "^3.1.1",
+    "lodash": "^4.17.15",
     "p-cancelable": "^2.0.0"
   }
 }
