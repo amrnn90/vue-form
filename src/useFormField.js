@@ -47,7 +47,8 @@ export default function useFormField(
     }),
 
     initialValue: computed(() => {
-      return _.get(form.initialFields, state.name);
+      const val = _.get(form.initialFields, state.name);
+      return Object.is(val, undefined) ? null : val;
     }),
 
     isEmpty: computed(() => {
@@ -79,7 +80,7 @@ export default function useFormField(
     }),
 
     isUpdated: computed(() => {
-      return _.isEqual(state.initialValue, state.value);
+      return !_.isEqual(state.initialValue, state.value);
     }),
   });
 

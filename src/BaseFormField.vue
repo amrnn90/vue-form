@@ -11,11 +11,7 @@
       {{ field.label }}
     </label>
 
-    <slot
-      :input-props="field.inputProps"
-      :input-listeners="field.inputListeners"
-      class="base-form-field__input"
-    />
+    <slot v-bind="field" class="base-form-field__input" />
 
     <div v-if="field.hasError" class="base-form-field__error">
       {{ field.error }}
