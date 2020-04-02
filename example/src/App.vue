@@ -1,8 +1,13 @@
 <template>
   <div id="app">
     <base-form #default="{form}" @submit="onSubmit">
-      <base-form-field #default="{inputProps, inputListeners}" name="title">
-        <input type="text" v-bind="inputProps" v-on="inputListeners" />
+      <base-form-field #default="field" name="title">
+        <input
+          type="text"
+          v-bind="field.inputProps"
+          v-on="field.inputListeners"
+        />
+        <pre>{{ field }}</pre>
       </base-form-field>
 
       <button :disabled="form.hasErrors">Submit</button>
