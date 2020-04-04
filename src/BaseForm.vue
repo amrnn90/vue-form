@@ -23,7 +23,7 @@ export default {
       touched: {},
       errors: {},
       hasErrors: computed(
-        () => Object.values(form.errors).filter(error => !!error).length > 0
+        () => Object.values(form.errors).filter((error) => !!error).length > 0
       ),
       waitingForErrorFocus: false,
       isValidating: false,
@@ -49,7 +49,7 @@ export default {
           form.isSubmitting = false;
         };
 
-        const onError = errors => {
+        const onError = (errors) => {
           setErrors(errors);
           form.isSubmitting = false;
           waitForErrorFocus();
@@ -98,7 +98,7 @@ export default {
 
       return lastValidatePromise(
         props.validate ? props.validate(form.fields, form.errors) : form.errors
-      ).then(errors => {
+      ).then((errors) => {
         form.isValidating = false;
         setErrors(errors);
         return errors;
@@ -111,14 +111,13 @@ export default {
 
     function initField(name) {
       const current = getField(name);
-      const newFields = { ...form.fields };
-      _.set(newFields, name, Object.is(current, undefined) ? null : current);
-      form.fields = newFields;
+      setField(current);
     }
 
     function setField(name, newValue) {
-      newValue = newValue === "" || newValue === undefined ? null : newValue;
-      _.set(form.fields, name, newValue);
+      const newFields = { ...form.fields };
+      _.set(newFields, name, Object.is(newValue, undefined) ? null : newValue);
+      form.fields = newFields;
       form.errors = { ..._.omit(form.errors, [name]) };
     }
 
