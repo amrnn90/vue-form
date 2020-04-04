@@ -66,8 +66,9 @@ export default function useFormField(
 
     hasDescendentsError: computed(() => {
       return (
-        Object.keys(form.errors).filter(key => key.startsWith(state.name + "."))
-          .length > 0
+        Object.keys(form.errors).filter((key) =>
+          key.startsWith(state.name + ".")
+        ).length > 0
       );
     }),
 
@@ -133,7 +134,7 @@ export default function useFormField(
 
   watch(
     () => form.waitingForErrorFocus,
-    newState => {
+    (newState) => {
       if (newState && state.hasErrorOrHasDescendentsError) {
         focus();
         if (!state.hasDescendentsError) {
@@ -144,7 +145,7 @@ export default function useFormField(
     { immediate: true }
   );
 
-  onMounted(function() {
+  onMounted(function () {
     el.value = this.$el;
   });
 
