@@ -111,7 +111,7 @@ export default {
 
     function initField(name) {
       const current = getField(name);
-      setField(current);
+      setField(name, current);
     }
 
     function setField(name, newValue) {
