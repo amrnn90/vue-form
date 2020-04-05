@@ -111,6 +111,11 @@ export default {
 
     function initField(name) {
       const current = getField(name);
+      if (Object.is(current, undefined)) {
+        const newInitialFields = { ...form.initialFields };
+        _.set(newInitialFields, name, null);
+        form.initialFields = newInitialFields;
+      }
       setField(name, current);
     }
 
