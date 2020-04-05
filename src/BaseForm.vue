@@ -124,7 +124,9 @@ export default {
       _.set(
         newFields,
         name,
-        Object.is(newValue, undefined) || newValue === "" ? null : newValue
+        Object.is(newValue, undefined) || newValue === false || newValue === ""
+          ? null
+          : newValue
       );
       form.fields = newFields;
       form.errors = { ..._.omit(form.errors, [name]) };
