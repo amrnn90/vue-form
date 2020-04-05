@@ -121,7 +121,11 @@ export default {
 
     function setField(name, newValue) {
       const newFields = { ...form.fields };
-      _.set(newFields, name, Object.is(newValue, undefined) ? null : newValue);
+      _.set(
+        newFields,
+        name,
+        Object.is(newValue, undefined) || newValue === "" ? null : newValue
+      );
       form.fields = newFields;
       form.errors = { ..._.omit(form.errors, [name]) };
     }
