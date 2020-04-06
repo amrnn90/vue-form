@@ -1,6 +1,6 @@
 {
   "name": "@amrnn/vue-form",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "main": "dist/js/vue-form.umd.js",
   "scripts": {
