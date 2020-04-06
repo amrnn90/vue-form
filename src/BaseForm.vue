@@ -110,7 +110,7 @@ export default {
     }
 
     function initField(name) {
-      const current = getField(name);
+      const current = _.cloneDeep(getField(name));
       if (!(name in Object.keys(form.initialFields))) {
         const newInitialFields = { ...form.initialFields };
         newInitialFields[name] = valueShouldBeNulled(current) ? null : current;
