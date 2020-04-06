@@ -111,7 +111,7 @@ export default {
 
     function initField(name) {
       const current = getField(name);
-      if (Object.is(current, undefined)) {
+      if (isEmptyValue(current)) {
         const newInitialFields = { ...form.initialFields };
         _.set(newInitialFields, name, null);
         form.initialFields = newInitialFields;
@@ -121,19 +121,17 @@ export default {
 
     function setField(name, newValue) {
       const newFields = { ...form.fields };
-      _.set(
-        newFields,
-        name,
-        Object.is(newValue, undefined) || newValue === false || newValue === ""
-          ? null
-          : newValue
-      );
+      _.set(newFields, name, isEmptyValue(newValue) ? null : newValue);
       form.fields = newFields;
       form.errors = { ..._.omit(form.errors, [name]) };
     }
 
     function setTouched(name) {
       form.touched = { ...form.touched, [name]: true };
+    }
+
+    function isEmptyValue(value) {
+      return Object.is(value, undefined) || value === false || value === "";
     }
 
     return { form, onSubmit };
