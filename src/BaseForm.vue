@@ -19,7 +19,7 @@ export default {
 
     const form = reactive({
       fields: _.cloneDeep(props.item) || {},
-      initialFields: _.cloneDeep(props.item) || {},
+      initialFields: {},
       touched: {},
       errors: {},
       hasErrors: computed(
@@ -111,9 +111,9 @@ export default {
 
     function initField(name) {
       const current = getField(name);
-      if (valueShouldBeNulled(current)) {
+      if (!(name in Object.keys(form.initialFields))) {
         const newInitialFields = { ...form.initialFields };
-        _.set(newInitialFields, name, null);
+        newInitialFields[name] = valueShouldBeNulled(current) ? null : current;
         form.initialFields = newInitialFields;
       }
       setField(name, current);
