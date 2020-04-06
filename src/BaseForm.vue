@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { reactive, computed, provide } from "@vue/composition-api";
+import { reactive, computed, provide, onMounted } from "@vue/composition-api";
 import _ from "./utils/lodash";
 import lastPromise from "./utils/last-promise";
 
@@ -142,6 +142,14 @@ export default {
         (value.constructor === Array && value.length === 0)
       );
     }
+
+    // after all fields have run initField()
+    onMounted(() => {
+      form.initialFields = {
+        ...form.initialFields,
+        ..._.cloneDeep(form.fields),
+      };
+    });
 
     return { form, onSubmit };
   },
