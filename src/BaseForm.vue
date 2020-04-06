@@ -111,7 +111,7 @@ export default {
 
     function initField(name) {
       const current = getField(name);
-      if (isEmptyValue(current)) {
+      if (valueShouldBeNulled(current)) {
         const newInitialFields = { ...form.initialFields };
         _.set(newInitialFields, name, null);
         form.initialFields = newInitialFields;
@@ -121,7 +121,7 @@ export default {
 
     function setField(name, newValue) {
       const newFields = { ...form.fields };
-      _.set(newFields, name, isEmptyValue(newValue) ? null : newValue);
+      _.set(newFields, name, valueShouldBeNulled(newValue) ? null : newValue);
       form.fields = newFields;
       form.errors = { ..._.omit(form.errors, [name]) };
     }
@@ -130,8 +130,15 @@ export default {
       form.touched = { ...form.touched, [name]: true };
     }
 
-    function isEmptyValue(value) {
-      return Object.is(value, undefined) || value === false || value === "";
+    function valueShouldBeNulled(value) {
+      return (
+        Object.is(value, undefined) ||
+        value === null ||
+        value === false ||
+        value === "" ||
+        (value.constructor === Object && Object.keys(value).length === 0) ||
+        (value.constructor === Array && value.length === 0)
+      );
     }
 
     return { form, onSubmit };
