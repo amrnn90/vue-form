@@ -101,7 +101,9 @@ export default function useFormField(
 
     form.setField(
       state.name,
-      typeof setValue === "function" ? setValue(newValue) : newValue
+      typeof setValue === "function"
+        ? setValue(newValue, state.value, state.passedValue)
+        : newValue
     );
   }
 
@@ -145,7 +147,7 @@ export default function useFormField(
     { immediate: true }
   );
 
-  onMounted(function () {
+  onMounted(function() {
     el.value = this.$el;
   });
 
