@@ -37,7 +37,7 @@ export default function useFormField(
     }),
 
     value: computed(() => {
-      return _.get(form.fields, name);
+      return _.get(form.fields, state.name);
     }),
 
     passedValue: computed(() => {
