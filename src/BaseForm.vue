@@ -111,7 +111,7 @@ export default {
 
     function initField(name) {
       const current = getField(name);
-      if (!(name in Object.keys(form.initialFields))) {
+      if (!(name in form.initialFields)) {
         const newInitialFields = { ...form.initialFields };
         newInitialFields[name] = valueShouldBeNulled(current)
           ? null
