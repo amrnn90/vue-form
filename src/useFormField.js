@@ -85,8 +85,6 @@ export default function useFormField(
     }),
   });
 
-  form.initField(state.name);
-
   function onInput(evOrValue) {
     let newValue;
     if (evOrValue && typeof evOrValue === "object" && evOrValue.target) {
@@ -145,6 +143,16 @@ export default function useFormField(
       }
     },
     { immediate: true }
+  );
+
+  watch(
+    () => state.name,
+    (newName) => {
+      form.initField(newName);
+    },
+    {
+      immediate: true,
+    }
   );
 
   onMounted(function() {
