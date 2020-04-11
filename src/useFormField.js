@@ -6,13 +6,13 @@ import {
   watch,
   toRefs,
   isRef,
-  onMounted,
+  onMounted
 } from "@vue/composition-api";
 import _ from "./utils/lodash";
 
 export default function useFormField(
   name,
-  { label, onFocus, getValue, setValue } = {}
+  { label, onFocus, unsetIfNull = false } = {}
 ) {
   onFocus = onFocus || onFocusDefault;
 
@@ -33,22 +33,15 @@ export default function useFormField(
     }),
 
     inputProps: computed(() => {
-      return { id: state.name, name: state.name, value: state.passedValue };
+      return { id: state.name, name: state.name, value: state.value };
     }),
 
     value: computed(() => {
       return _.get(form.fields, state.name);
     }),
 
-    passedValue: computed(() => {
-      return typeof getValue === "function"
-        ? getValue(state.value)
-        : state.value;
-    }),
-
     initialValue: computed(() => {
-      const val = _.get(form.initialFields, state.name);
-      return Object.is(val, undefined) ? null : val;
+      return _.get(form.initialFields, state.name);
     }),
 
     isEmpty: computed(() => {
@@ -66,9 +59,8 @@ export default function useFormField(
 
     hasDescendentsError: computed(() => {
       return (
-        Object.keys(form.errors).filter((key) =>
-          key.startsWith(state.name + ".")
-        ).length > 0
+        Object.keys(form.errors).filter(key => key.startsWith(state.name + "."))
+          .length > 0
       );
     }),
 
@@ -81,8 +73,11 @@ export default function useFormField(
     }),
 
     isUpdated: computed(() => {
-      return !_.isEqual(state.initialValue, state.value);
-    }),
+      return !_.isEqual(
+        normalizeValue(state.initialValue),
+        normalizeValue(state.value)
+      );
+    })
   });
 
   function onInput(evOrValue) {
@@ -93,16 +88,9 @@ export default function useFormField(
       newValue = evOrValue;
     }
 
-    // newValue = this.isTranslatable
-    // ? { ...(this.value || {}),[this.sharedForm.locale]: newValue }
-    // : newValue;
+    newValue = normalizeValue(newValue);
 
-    form.setField(
-      state.name,
-      typeof setValue === "function"
-        ? setValue(newValue, state.value, state.passedValue)
-        : newValue
-    );
+    form.setField(state.name, newValue);
   }
 
   function onBlur() {
@@ -132,9 +120,20 @@ export default function useFormField(
     input.scrollIntoView({ block: "nearest" });
   }
 
+  function normalizeValue(value) {
+    return Object.is(value, undefined) ||
+      value === null ||
+      value === false ||
+      value === "" ||
+      (value.constructor === Object && Object.keys(value).length === 0) ||
+      (value.constructor === Array && value.length === 0)
+      ? null
+      : value;
+  }
+
   watch(
     () => form.waitingForErrorFocus,
-    (newState) => {
+    newState => {
       if (newState && state.hasErrorOrHasDescendentsError) {
         focus();
         if (!state.hasDescendentsError) {
@@ -147,11 +146,30 @@ export default function useFormField(
 
   watch(
     () => state.name,
-    (newName) => {
-      form.initField(newName);
+    newName => {
+      const value = normalizeValue(form.getField(newName));
+      form.setInitialField(newName, value);
+    },
+    {
+      immediate: true
+    }
+  );
+
+  watch(
+    () => state.value,
+    newValue => {
+      const value = normalizeValue(newValue);
+      if (value === null && unsetIfNull) {
+        return form.unsetField(state.name);
+      }
+
+      if (value !== newValue) {
+        return form.setField(state.name, value);
+      }
     },
     {
       immediate: true,
+      deep: true
     }
   );
 
@@ -163,7 +181,7 @@ export default function useFormField(
     ...toRefs(state),
     ...{
       reset,
-      focus,
-    },
+      focus
+    }
   });
 }

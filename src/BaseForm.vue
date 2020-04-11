@@ -12,7 +12,7 @@ import lastPromise from "./utils/last-promise";
 export default {
   props: {
     item: { type: Object, default: null },
-    validate: { type: Function, default: null },
+    validate: { type: Function, default: null }
   },
   setup(props, { emit }) {
     const lastValidatePromise = lastPromise();
@@ -23,7 +23,7 @@ export default {
       touched: {},
       errors: {},
       hasErrors: computed(
-        () => Object.values(form.errors).filter((error) => !!error).length > 0
+        () => Object.values(form.errors).filter(error => !!error).length > 0
       ),
       waitingForErrorFocus: false,
       isValidating: false,
@@ -31,10 +31,11 @@ export default {
       hasSubmitted: false,
       runValidate: runValidate,
       getField: getField,
-      initField: initField,
+      setInitialField: setInitialField,
       setField: setField,
+      unsetField: unsetField,
       setTouched: setTouched,
-      cancelWaitForErrorFocus: cancelWaitForErrorFocus,
+      cancelWaitForErrorFocus: cancelWaitForErrorFocus
     });
 
     provide("FORM", form);
@@ -49,7 +50,7 @@ export default {
           form.isSubmitting = false;
         };
 
-        const onError = (errors) => {
+        const onError = errors => {
           setErrors(errors);
           form.isSubmitting = false;
           waitForErrorFocus();
@@ -58,7 +59,7 @@ export default {
         emit("submit", {
           data: form.fields,
           onSuccess,
-          onError,
+          onError
         });
       };
 
@@ -98,7 +99,7 @@ export default {
 
       return lastValidatePromise(
         props.validate ? props.validate(form.fields, form.errors) : form.errors
-      ).then((errors) => {
+      ).then(errors => {
         form.isValidating = false;
         setErrors(errors);
         return errors;
@@ -109,21 +110,30 @@ export default {
       return _.get(form.fields, name);
     }
 
-    function initField(name) {
-      const current = getField(name);
+    function setInitialField(name, value) {
       if (!(name in form.initialFields)) {
+        // TODO: use Vue3 reactivity
         const newInitialFields = { ...form.initialFields };
-        newInitialFields[name] = valueShouldBeNulled(current)
-          ? null
-          : _.cloneDeep(current);
+        newInitialFields[name] = _.cloneDeep(value);
         form.initialFields = newInitialFields;
       }
-      setField(name, current);
+      setField(name, value);
     }
 
     function setField(name, newValue) {
+      // TODO: use Vue3 reactivity
       const newFields = { ...form.fields };
-      _.set(newFields, name, valueShouldBeNulled(newValue) ? null : newValue);
+      _.set(newFields, name, newValue);
+      form.fields = newFields;
+      form.errors = { ..._.omit(form.errors, [name]) };
+    }
+
+    function unsetField(name) {
+      if (!_.has(form.fields, name)) return;
+
+      // TODO: use Vue3 reactivity
+      const newFields = { ...form.fields };
+      _.unset(newFields, name);
       form.fields = newFields;
       form.errors = { ..._.omit(form.errors, [name]) };
     }
@@ -132,26 +142,15 @@ export default {
       form.touched = { ...form.touched, [name]: true };
     }
 
-    function valueShouldBeNulled(value) {
-      return (
-        Object.is(value, undefined) ||
-        value === null ||
-        value === false ||
-        value === "" ||
-        (value.constructor === Object && Object.keys(value).length === 0) ||
-        (value.constructor === Array && value.length === 0)
-      );
-    }
-
     // after all fields have run initField()
     onMounted(() => {
       form.initialFields = {
         ...form.initialFields,
-        ..._.cloneDeep(form.fields),
+        ..._.cloneDeep(form.fields)
       };
     });
 
     return { form, onSubmit };
-  },
+  }
 };
 </script>
