@@ -2,11 +2,11 @@ import {
   reactive,
   inject,
   computed,
-  ref,
+  // ref,
   watch,
   toRefs,
   isRef,
-  onMounted
+  // onMounted,
 } from "@vue/composition-api";
 import _ from "./utils/lodash";
 
@@ -14,11 +14,12 @@ export default function useFormField(
   name,
   { label, onFocus, unsetIfNull = false } = {}
 ) {
-  onFocus = onFocus || onFocusDefault;
+  // onFocus = onFocus || onFocusDefault;
+  onFocus = onFocus || (() => {});
 
   const form = inject("FORM");
 
-  const el = ref(null);
+  // const el = ref(null);
 
   const state = reactive({
     name: computed(() => {
@@ -59,8 +60,9 @@ export default function useFormField(
 
     hasDescendentsError: computed(() => {
       return (
-        Object.keys(form.errors).filter(key => key.startsWith(state.name + "."))
-          .length > 0
+        Object.keys(form.errors).filter((key) =>
+          key.startsWith(state.name + ".")
+        ).length > 0
       );
     }),
 
@@ -77,7 +79,7 @@ export default function useFormField(
         normalizeValue(state.initialValue),
         normalizeValue(state.value)
       );
-    })
+    }),
   });
 
   function onInput(evOrValue) {
@@ -109,16 +111,16 @@ export default function useFormField(
     }
   }
 
-  function onFocusDefault() {
-    const input =
-      el.value &&
-      el.value.querySelector(
-        "input:not([type=hidden]):not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex], [contenteditable]"
-      );
-    if (!input) return;
-    input.focus();
-    input.scrollIntoView({ block: "nearest" });
-  }
+  // function onFocusDefault() {
+  //   const input =
+  //     el.value &&
+  //     el.value.querySelector(
+  //       "input:not([type=hidden]):not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex], [contenteditable]"
+  //     );
+  //   if (!input) return;
+  //   input.focus();
+  //   input.scrollIntoView({ block: "nearest" });
+  // }
 
   function normalizeValue(value) {
     return Object.is(value, undefined) ||
@@ -133,7 +135,7 @@ export default function useFormField(
 
   watch(
     () => form.waitingForErrorFocus,
-    newState => {
+    (newState) => {
       if (newState && state.hasErrorOrHasDescendentsError) {
         focus();
         if (!state.hasDescendentsError) {
@@ -146,18 +148,18 @@ export default function useFormField(
 
   watch(
     () => state.name,
-    newName => {
+    (newName) => {
       const value = normalizeValue(form.getField(newName));
       form.setInitialField(newName, value);
     },
     {
-      immediate: true
+      immediate: true,
     }
   );
 
   watch(
     () => state.value,
-    newValue => {
+    (newValue) => {
       const value = normalizeValue(newValue);
       if (value === null && unsetIfNull) {
         return form.unsetField(state.name);
@@ -169,19 +171,19 @@ export default function useFormField(
     },
     {
       immediate: true,
-      deep: true
+      deep: true,
     }
   );
 
-  onMounted(function() {
-    el.value = this.$el;
-  });
+  // onMounted(function() {
+  //   el.value = this.$el;
+  // });
 
   return reactive({
     ...toRefs(state),
     ...{
       reset,
-      focus
-    }
+      focus,
+    },
   });
 }

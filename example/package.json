@@ -4,7 +4,7 @@
     "start": "node vuepack.js dev"
   },
   "dependencies": {
-    "@vue/composition-api": "^0.5.0",
+    "@vue/composition-api": "^1.0.0-beta.3",
     "vue": "^2.6.11"
   },
   "devDependencies": {
